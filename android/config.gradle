@@ -55,5 +55,5 @@ ext.pspdfkitFlutterVersion = pubspecYaml.version
 ext.androidCompileSdkVersion = 31
 ext.androidMinSdkVersion = 21
 ext.androidTargetSdkVersion = 30
-ext.androidGradlePluginVersion = '7.1.1'
+ext.androidGradlePluginVersion = '7.2.0'
 ext.kotlinVersion = "1.5.31"

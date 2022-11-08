@@ -25,6 +25,7 @@ import com.pspdfkit.configuration.page.PageScrollMode;
 import com.pspdfkit.configuration.settings.SettingsMenuItemType;
 import com.pspdfkit.configuration.sharing.ShareFeatures;
 import com.pspdfkit.configuration.theming.ThemeMode;
+import com.pspdfkit.configuration.forms.SignaturePickerOrientation;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -117,12 +118,12 @@ class ConfigurationAdapter {
      */
     @Deprecated
     private static final String SHOW_DOCUMENT_LABEL = "showDocumentLabel";
-    /** 
+    /**
      * @deprecated This key word was deprecated with PSPDFKit for Fluttter 3.1.
      * Use {@code FIRST_PAGE_ALWAYS_SINGLE} instead, which replaces it.
      */
     private static final String IS_FIRST_PAGE_ALWAYS_SINGLE = "isFirstPageAlwaysSingle";
-    /** 
+    /**
      * @deprecated This key word was deprecated with PSPDFKit for Fluttter 3.1.
      * Use {@code SHOW_BOOKMARKS_ACTION} instead, which replaces it.
      */
@@ -134,7 +135,7 @@ class ConfigurationAdapter {
     private static final String PAGE_TRANSITION_SCROLL_PER_SPREAD = "scrollPerSpread";
     private static final String PAGE_TRANSITION_SCROLL_CONTINUOUS = "scrollContinuous";
     private static final String PAGE_TRANSITION_CURL = "curl";
-    
+
     // Document Presentation Values
     private static final String PAGE_MODE_AUTOMATIC = "automatic";
     private static final String PAGE_MODE_SINGLE = "single";
@@ -175,8 +176,10 @@ class ConfigurationAdapter {
     private static final String SHOW_THUMBNAIL_BAR_SCRUBBER_BAR = "scrubberBar";
     private static final String SHOW_THUMBNAIL_BAR_SCROLLABLE = "scrollable";
 
-    @NonNull private final PdfActivityConfiguration.Builder configuration;
-    @Nullable private String password = null;
+    @NonNull
+    private final PdfActivityConfiguration.Builder configuration;
+    @Nullable
+    private String password = null;
 
     ConfigurationAdapter(@NonNull Context context,
                          @Nullable HashMap<String, Object> configurationMap) {
@@ -506,6 +509,9 @@ class ConfigurationAdapter {
     private void configureShowAnnotationListAction(boolean showAnnotationListAction) {
         if (showAnnotationListAction) {
             configuration.enableAnnotationList();
+            configuration.forceSignatureButtonPositionInMainToolbar(true);
+            configuration.setSignaturePickerOrientation(SignaturePickerOrientation.LOCKED_PORTRAIT);
+
         } else {
             configuration.disableAnnotationList();
         }
@@ -661,27 +667,27 @@ class ConfigurationAdapter {
                 case SETTINGS_MENU_ITEM_THEME:
                 case SETTINGS_MENU_ITEM_ANDROID_THEME:
                     settingsMenuItemTypes.add(SettingsMenuItemType.THEME);
-                break;
+                    break;
                 case SETTINGS_MENU_ITEM_SCREEN_AWAKE:
                 case SETTINGS_MENU_ITEM_ANDROID_SCREEN_AWAKE:
                     settingsMenuItemTypes.add(SettingsMenuItemType.SCREEN_AWAKE);
-                break;
+                    break;
                 case SETTINGS_MENU_ITEM_PAGE_LAYOUT:
                 case SETTINGS_MENU_ITEM_ANDROID_PAGE_LAYOUT:
                     settingsMenuItemTypes.add(SettingsMenuItemType.PAGE_LAYOUT);
-                break;
+                    break;
                 case SETTINGS_MENU_ITEM_PAGE_TRANSITION:
                     settingsMenuItemTypes.add(SettingsMenuItemType.PAGE_TRANSITION);
-                break;
+                    break;
                 case SETTINGS_MENU_ITEM_SCROLL_DIRECTION:
                     settingsMenuItemTypes.add(SettingsMenuItemType.SCROLL_DIRECTION);
-                break;
+                    break;
                 case SETTINGS_MENU_ITEM_IOS_APPEARANCE:
                 case SETTINGS_MENU_ITEM_IOS_BRIGHTNESS:
                 case SETTINGS_MENU_ITEM_IOS_PAGE_MODE:
                 case SETTINGS_MENU_ITEM_IOS_SPREAD_FITTING:
                     // NO-OP. Only supported on iOS.
-                break;
+                    break;
                 default:
                     throw new IllegalArgumentException("Undefined settings menu item " + menuType);
             }
@@ -718,13 +724,13 @@ class ConfigurationAdapter {
      * When reading configuration options, we check not only for the given configuration string,
      * but also for a string with the `android` prefix. For instance if the user enters
      * `androidPageScrollDirection`, it is considered a valid string equal to `pageScrollDirection`.
-     * 
+     * <p>
      * When documenting, we always prefer configuration option strings:
-     * 
+     * <p>
      * - No prefix          : If the key works for both iOS and Android.
      * - `android` prefix   : If the key works only for Android.
      * - `iOS` prefix       : If the key works only for iOS.
-     */ 
+     */
     private String addAndroidPrefix(String key) {
         // Capitalize the first letter.
         String cap = String.valueOf(key.charAt(0)).toUpperCase() + key.substring(1);
@@ -733,8 +739,8 @@ class ConfigurationAdapter {
 
     @Nullable
     private <T> String getKeyOfType(@NonNull HashMap<String, Object> configurationMap,
-                                @NonNull String key,
-                                @NonNull Class<T> clazz) {
+                                    @NonNull String key,
+                                    @NonNull Class<T> clazz) {
         if (containsKeyOfType(configurationMap, key, clazz)) {
             return key;
         }

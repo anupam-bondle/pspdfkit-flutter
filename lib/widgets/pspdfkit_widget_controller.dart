@@ -81,6 +81,9 @@ class PspdfkitWidgetController {
   /// If there were no changes to the document, the document file will not be modified.
   Future<bool?> save() async => _channel.invokeMethod('save');
 
-  Future<bool?> showAnnotationToolbar() async => _channel.invokeMethod('showAnnotationToolbar');
+  Future<bool?> showAnnotationToolbar() async =>
+      _channel.invokeMethod('showAnnotationToolbar');
 
+  Future<bool?> registerAuthorName(String name) async => _channel
+      .invokeMethod('registerAuthorName', <String, String>{'name': name});
 }
