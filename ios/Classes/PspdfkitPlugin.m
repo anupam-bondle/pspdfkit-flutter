@@ -10,6 +10,7 @@
 #import "PspdfPlatformViewFactory.h"
 #import "PspdfkitFlutterHelper.h"
 #import "PspdfkitFlutterConverter.h"
+#import "PspdfkitCustomButtonAnnotationToolbar.h"
 
 @import PSPDFKit;
 @import PSPDFKitUI;

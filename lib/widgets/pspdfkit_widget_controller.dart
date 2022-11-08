@@ -80,4 +80,7 @@ class PspdfkitWidgetController {
   /// Saves the document back to its original location if it has been changed.
   /// If there were no changes to the document, the document file will not be modified.
   Future<bool?> save() async => _channel.invokeMethod('save');
+
+  Future<bool?> showAnnotationToolbar() async => _channel.invokeMethod('showAnnotationToolbar');
+
 }

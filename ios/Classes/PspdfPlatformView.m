@@ -9,6 +9,7 @@
 #import "PspdfPlatformView.h"
 #import "PspdfkitFlutterHelper.h"
 #import "PspdfkitFlutterConverter.h"
+#import "PspdfkitCustomButtonAnnotationToolbar.h"
 
 @import PSPDFKit;
 @import PSPDFKitUI;
@@ -57,9 +58,56 @@
             [PspdfkitFlutterHelper unlockWithPasswordIfNeeded:document dictionary:configurationDictionary];
 
             BOOL isImageDocument = [PspdfkitFlutterHelper isImageDocument:documentPath];
-            PSPDFConfiguration *configuration = [PspdfkitFlutterConverter configuration:configurationDictionary isImageDocument:isImageDocument];
+           PSPDFConfiguration *configuration = [PspdfkitFlutterConverter configuration:configurationDictionary isImageDocument:isImageDocument];
+            
+
+           PSPDFAnnotationToolbarConfiguration *annotationToolbarConfiguration = [[PSPDFAnnotationToolbarConfiguration alloc] initWithAnnotationGroups:@[
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringSignature ]
+                          ]],
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringFreeText],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringFreeText variant:PSPDFAnnotationVariantStringFreeTextCallout]
+                          ]],
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringInk variant:PSPDFAnnotationVariantStringInkHighlighter configurationBlock:[PSPDFAnnotationGroupItem inkConfigurationBlock ]]
+                          ]],
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringInk variant:PSPDFAnnotationVariantStringInkPen configurationBlock:[PSPDFAnnotationGroupItem inkConfigurationBlock ]],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringInk variant:PSPDFAnnotationVariantStringInkMagic configurationBlock:[PSPDFAnnotationGroupItem inkConfigurationBlock ]]
+                          ]],
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringHighlight],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringUnderline],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringSquiggly],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringStrikeOut]
+                          ]],
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringSquare],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringCircle],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringLine],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringLine variant:PSPDFAnnotationVariantStringLineArrow],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringPolygon],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringPolyLine]
+                          ]],
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringImage],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringStamp],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringSavedAnnotations],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringLink],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringSound],
+                          ]],
+                          [PSPDFAnnotationGroup groupWithItems:@[
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringEraser],
+                              [PSPDFAnnotationGroupItem itemWithType:PSPDFAnnotationStringSelectionTool]
+                          ]]
+                      ]];
+
+            
             _pdfViewController = [[PSPDFViewController alloc] initWithDocument:document configuration:configuration];
+            _pdfViewController.annotationToolbarController.annotationToolbar.configurations = @[annotationToolbarConfiguration];
             _pdfViewController.appearanceModeManager.appearanceMode = [PspdfkitFlutterConverter appearanceMode:configurationDictionary];
+         
             _pdfViewController.pageIndex = [PspdfkitFlutterConverter pageIndex:configurationDictionary];
             _pdfViewController.delegate = self;
 

@@ -108,6 +108,14 @@
         NSArray<NSDictionary<NSString *,NSObject *> *> *pages = call.arguments[@"pages"];
         NSURL *processedDocumentURL = [PspdfkitFlutterHelper writableFileURLWithPath:outputPath override:YES copyIfNeeded:NO];
         [PspdfkitPdfGenrator generatePdfWithPages:pages outputUrl:processedDocumentURL results:result];
+    }else if ([@"showAnnotationToolbar" isEqualToString:call.method]){
+        UIBarButtonItem *annotationButtonItem = pdfViewController.annotationButtonItem;
+        [UIApplication.sharedApplication sendAction:annotationButtonItem.action to:annotationButtonItem.target from:nil forEvent:nil];
+        result(@(YES));
+    }else if ([@"registerAuthorName" isEqualToString:call.method]){
+        NSString *name = call.arguments[@"name"];
+        PSPDFUsernameHelper.defaultAnnotationUsername = name;
+        result(@(YES));
     } else {
         result(FlutterMethodNotImplemented);
     }
